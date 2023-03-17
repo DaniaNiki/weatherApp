@@ -3,12 +3,10 @@ package com.daniil.core.data.remote.source
 import android.content.Context
 import com.daniil.core.data.remote.responce.WeatherApiResponse
 import com.daniil.core.data.remote.service.Webservice
-import com.daniil.core.data.remote.service.Webservice.Companion.BASE_URL
 import dagger.hilt.android.qualifiers.ApplicationContext
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.daniil.core.data.tools.Result
+import com.daniil.core.tools.Result
 import java.util.Locale
 import kotlin.Exception
 
@@ -28,7 +26,7 @@ class RemoteDataSource @Inject constructor(
 
     private val apiKey = "46849f1b70e1493b82081332231503"
 
-   suspend fun getWeatherByCity(city:String) : Result<WeatherApiResponse>{
+   suspend fun getWeatherByCity(city:String) : Result<WeatherApiResponse> {
        return try {
             val response = service.getWeatherWithCity(
                 city = city.toString(),

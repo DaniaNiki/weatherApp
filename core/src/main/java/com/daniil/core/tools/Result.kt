@@ -1,4 +1,4 @@
-package com.daniil.core.data.tools
+package com.daniil.core.tools
 
 abstract class Result< out T :Any?> {
 

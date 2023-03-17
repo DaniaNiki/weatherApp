@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import com.daniil.core.data.tools.Result
+import com.daniil.core.tools.Result
 import timber.log.Timber
 import javax.inject.Inject
 

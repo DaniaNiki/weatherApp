@@ -1,15 +1,13 @@
 package com.daniil.core.data.remote.service
 
-import androidx.core.location.LocationRequestCompat.Quality
 import com.daniil.core.data.remote.responce.WeatherApiResponse
-import com.daniil.core.data.remote.responce.WeatherDto
 import com.daniil.core.data.remote.source.*
 import retrofit2.Response
 import retrofit2.http.*
 
 interface Webservice {
 
-    @GET(BASE_URL+"current.json")
+    @GET(BASE_URL +"current.json")
   suspend fun getWeatherWithCity(
         @Query(CITY) city:String,
         @Query(LANG) lang:String,

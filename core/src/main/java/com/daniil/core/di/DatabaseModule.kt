@@ -1,4 +1,4 @@
-package com.daniil.core.data.di
+package com.daniil.core.di
 
 //import android.content.Context
 //import androidx.room.Room

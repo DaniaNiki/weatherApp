@@ -1,7 +1,6 @@
-package com.daniil.core.data.di
+package com.daniil.core.di
 
 import android.content.Context
-import com.daniil.core.data.local.source.LocalDataSource
 import com.daniil.core.data.remote.service.Webservice
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -9,8 +8,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

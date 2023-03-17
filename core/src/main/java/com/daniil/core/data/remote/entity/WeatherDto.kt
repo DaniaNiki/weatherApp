@@ -1,4 +1,4 @@
-package com.daniil.core.data.remote.responce
+package com.daniil.core.data.remote.entity
 
 import com.google.gson.annotations.SerializedName
 
