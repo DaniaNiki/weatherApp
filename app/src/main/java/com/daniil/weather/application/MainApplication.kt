@@ -22,7 +22,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant()
-        getAllUsers()
+       getAllUsers()
     }
 
    private fun getAllUsers() = coroutineScope.launch {
