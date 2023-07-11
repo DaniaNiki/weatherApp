@@ -8,6 +8,9 @@ data class Location(
     val city:String,
     val region:String,
     val country:String,
-    val latitude:Float,
-    val longitude:Float
+    val latitude:Double,
+    val longitude:Double,
+    val timeZoneId:String,
+    val localTime:String,
+
 ):Parcelable

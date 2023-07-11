@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.daniil.weather.navigation.NavigationComponent
-import com.daniil.weather.ui.theme.NotionsTheme
+import com.example.feature.theme.NotionsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

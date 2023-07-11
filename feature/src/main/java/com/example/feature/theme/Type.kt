@@ -1,4 +1,4 @@
-package com.daniil.weather.ui.theme
+package com.example.feature.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

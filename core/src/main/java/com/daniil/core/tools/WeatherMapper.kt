@@ -19,7 +19,9 @@ fun LocationDto.toLocation() = Location(
     region = region,
     country = country,
     latitude = latitude,
-    longitude = longitude
+    longitude = longitude,
+    timeZoneId = timeZoneID,
+    localTime = localTime
 )
 
 fun CurrentHourDto.toCurrentWeather() = CurrentWeather(
