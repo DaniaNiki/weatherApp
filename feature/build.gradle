@@ -79,4 +79,9 @@ dependencies {
 
     //landscapist
     implementation "com.github.skydoves:landscapist-glide:1.5.2"
+
+    implementation "androidx.compose.material3:material3:1.1.1"
+    implementation "androidx.compose.material3:material3-window-size-class:1.1.1"
+
+    implementation "com.google.accompanist:accompanist-permissions:0.26.4-beta"
 }
