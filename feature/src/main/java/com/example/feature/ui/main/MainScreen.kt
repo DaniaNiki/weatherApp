@@ -62,9 +62,6 @@ import java.util.*
 
 @Composable
 fun SetMainScreen(viewModel: WeatherViewModel) {
-    MapKitFactory.setApiKey("2f6e832b-711e-42d7-ae58-90e368e2a01a")
-    MapKitFactory.initialize(LocalContext.current)
-    MapKitFactory.getInstance().onStart()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -131,11 +128,11 @@ fun Info(viewModel: WeatherViewModel) {
                 .defaultMinSize(minHeight = 150.dp)
                 .alpha(0.8f)
                 .padding(top = 20.dp)
-                .shadow(12.dp, ambientColor = Color.Black)
+//                .shadow(12.dp, ambientColor = Color.Black)
                 .heightIn(max = 150.dp)
                 .fillMaxWidth(0.95f)
                 .background(
-                    brush = brushByTime, shape = RoundedCornerShape(6.dp)
+                    color = Color.Transparent, shape = RoundedCornerShape(6.dp)
                 ), count = 2, state = pagerState,
             horizontalAlignment = Alignment.Start
         ) { page ->
@@ -167,12 +164,12 @@ fun Info(viewModel: WeatherViewModel) {
             }
         }
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-
+            Text(text = weather?.location?.city ?: "Город", style = Typography.h1)
             GlideImage(imageModel ="https:" +weather?.currentWeather?.condition?.icon, alignment = Alignment.Center, modifier = Modifier.size(120.dp))
             Spacer(modifier = Modifier.padding(top = 10.dp))
             weather?.currentWeather?.temperature?.let { Text(text = it.toString(), style = Typography.body1) }
             Spacer(modifier = Modifier.padding(top = 10.dp))
-            Text(text = weather?.currentWeather?.condition?.text ?: "123545", style = Typography.body1)
+            Text(text = weather?.currentWeather?.condition?.text ?: "Температура", style = Typography.body1)
         }
         if (weather != null) {
             val placeMark = ImageProvider.fromResource(
