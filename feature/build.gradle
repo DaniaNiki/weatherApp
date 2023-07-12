@@ -76,4 +76,7 @@ dependencies {
     implementation 'com.yandex.android:maps.mobile:4.3.1-lite'
 
     implementation "com.google.accompanist:accompanist-pager:0.28.0"
+
+    //landscapist
+    implementation "com.github.skydoves:landscapist-glide:1.5.2"
 }

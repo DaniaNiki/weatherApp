@@ -10,5 +10,7 @@ data class CurrentHourDto(
     )
 
 data class ConditionDto(
-    @field:SerializedName("icon") val temperatureIcon: String
+    @field:SerializedName("icon") val temperatureIcon: String,
+    @field:SerializedName("text") val text: String?,
+
 )

@@ -14,27 +14,8 @@ import javax.inject.Inject
 @HiltAndroidApp
 class MainApplication : Application() {
 
-    @Inject
-    lateinit var remoteDataSource: RemoteDataSource
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
     override fun onCreate() {
         super.onCreate()
-        Timber.plant()
-       getAllUsers()
-    }
-
-   private fun getAllUsers() = coroutineScope.launch {
-           remoteDataSource.getWeatherByCity(city ="Jaroslavl").let { result ->
-               when(result){
-                   is Result.Success ->{
-                      println(result.data.toString())
-                   }
-                   is Result.Error ->{
-                       println(result.exception.message)
-                   }
-               }
-           }
+        Timber.plant(Timber.DebugTree())
     }
 }

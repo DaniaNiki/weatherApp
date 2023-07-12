@@ -5,5 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Condition(
-    val icon:String
+    val icon:String,
+    val text:String?,
 ):Parcelable

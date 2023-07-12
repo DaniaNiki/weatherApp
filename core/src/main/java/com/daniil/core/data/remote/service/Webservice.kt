@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface Webservice {
 
-    @GET(BASE_URL +"current.json")
+  @GET(BASE_URL +"current.json")
   suspend fun getWeatherWithCity(
         @Query(CITY) city:String,
         @Query(LANG) lang:String,

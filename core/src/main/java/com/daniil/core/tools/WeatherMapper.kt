@@ -26,7 +26,7 @@ fun LocationDto.toLocation() = Location(
 
 fun CurrentHourDto.toCurrentWeather() = CurrentWeather(
     temperature = temperatureCelsius,
-    condition = Condition(condition.temperatureIcon),
+    condition = Condition(condition.temperatureIcon, condition.text),
     windSpeed = windSpeed
 )
 
