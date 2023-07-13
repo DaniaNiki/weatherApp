@@ -15,7 +15,8 @@ import com.daniil.core.tools.Result
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-private val getWeatherByCityUseCase: GetWeatherByCityUseCase) : ViewModel() {
+private val getWeatherByCityUseCase: GetWeatherByCityUseCase,
+) : ViewModel() {
 
     private val <T> T.exshausative :T
         get() = this
@@ -39,7 +40,6 @@ private val getWeatherByCityUseCase: GetWeatherByCityUseCase) : ViewModel() {
                else ->{}
            }
        }.exshausative
-
     }
 
     private fun sendShowWeatherEvent(error: String) = viewModelScope.launch{

@@ -84,4 +84,9 @@ dependencies {
     implementation "androidx.compose.material3:material3-window-size-class:1.1.1"
 
     implementation "com.google.accompanist:accompanist-permissions:0.26.4-beta"
+
+    //Timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

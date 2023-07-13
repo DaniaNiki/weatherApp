@@ -1,5 +1,6 @@
 package com.example.feature.ui.settings
 
+import android.Manifest
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,12 +22,13 @@ import com.example.feature.theme.Typography
 import com.example.feature.theme.createBackgroundGradient
 import com.example.feature.theme.mainScreenGradient
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsView(navController:NavController) {
-//    val permissionState = rememberMultiplePermissionsState(
-//        permissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
     var checked by remember {
         mutableStateOf(false)
     }
@@ -50,9 +52,11 @@ fun SettingsView(navController:NavController) {
         ) {
             Text(text = "Включить определение геолокации", modifier = Modifier.padding(start = 15.dp), style = Typography.body2, color = Color.Black)
             Switch(
-                checked = checked/*permissionState.allPermissionsGranted*/,
+                checked = permissionState.allPermissionsGranted,
                 onCheckedChange = { value ->
-                    checked = value
+                    if(value){
+                        permissionState.launchMultiplePermissionRequest()
+                    }
                 },
                 thumbContent = {
                     Icon(

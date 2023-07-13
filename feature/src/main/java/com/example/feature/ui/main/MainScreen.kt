@@ -1,5 +1,7 @@
 package com.example.feature.ui.main
 
+import android.content.Context
+import android.location.Location
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,7 +30,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.feature.BuildConfig
 import com.example.feature.theme.Typography
 import com.example.feature.theme.createBackgroundGradient
 import com.example.feature.theme.dayGradient
@@ -45,6 +46,8 @@ import com.example.feature.util.getLocalTime
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.skydoves.landscapist.glide.GlideImage
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -54,6 +57,7 @@ import com.yandex.runtime.image.ImageProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.lang.Float.min
 import java.lang.Math.cos
 import java.lang.Math.sin
@@ -74,6 +78,7 @@ fun SetMainScreen(viewModel: WeatherViewModel) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Info(viewModel: WeatherViewModel) {
+    val context = LocalContext.current
     val weather by viewModel.weather.observeAsState()
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
@@ -85,10 +90,12 @@ fun Info(viewModel: WeatherViewModel) {
     LaunchedEffect(Unit) {
         this.launch {
             viewModel.getWeatherByCity("Ярославль")
+            getCurrentLocation(context)
         }
     }
 
-    val hours = weather?.let { it.location.localTime.getLocalTime(timeZone = TimeZone.getTimeZone(it.location.timeZoneId)) }
+    val hours =
+        weather?.let { it.location.localTime.getLocalTime(timeZone = TimeZone.getTimeZone(it.location.timeZoneId)) }
             ?: LocalDateTime.now().hour
     val brushByTime by remember {
         mutableStateOf(
@@ -108,21 +115,22 @@ fun Info(viewModel: WeatherViewModel) {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(top= 25.dp))
+        Spacer(modifier = Modifier.padding(top = 25.dp))
         TextField(value = cityName, onValueChange = { newValue ->
             cityName = newValue
         },
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .align(Alignment.CenterHorizontally),
-        shape = RoundedCornerShape(6.dp),
-        singleLine = true,
-        keyboardActions = KeyboardActions(onDone = {
-            coroutineScope.launch {
-                viewModel.getWeatherByCity(cityName)
-            }
-            focusManager.clearFocus()
-        }))
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .align(Alignment.CenterHorizontally),
+            shape = RoundedCornerShape(6.dp),
+            singleLine = true,
+            keyboardActions = KeyboardActions(onDone = {
+                coroutineScope.launch {
+                    viewModel.getWeatherByCity(cityName)
+                }
+                focusManager.clearFocus()
+            })
+        )
         VerticalPager(
             modifier = Modifier
                 .defaultMinSize(minHeight = 150.dp)
@@ -136,7 +144,10 @@ fun Info(viewModel: WeatherViewModel) {
                 ), count = 2, state = pagerState,
             horizontalAlignment = Alignment.Start
         ) { page ->
-            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Row {
                     when (page) {
                         0 -> {
@@ -163,13 +174,29 @@ fun Info(viewModel: WeatherViewModel) {
                 }
             }
         }
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(text = weather?.location?.city ?: "Город", style = Typography.h1)
-            GlideImage(imageModel ="https:" +weather?.currentWeather?.condition?.icon, alignment = Alignment.Center, modifier = Modifier.size(120.dp))
+            GlideImage(
+                imageModel = "https:" + weather?.currentWeather?.condition?.icon,
+                alignment = Alignment.Center,
+                modifier = Modifier.size(120.dp)
+            )
             Spacer(modifier = Modifier.padding(top = 10.dp))
-            weather?.currentWeather?.temperature?.let { Text(text = it.toString(), style = Typography.body1) }
+            weather?.currentWeather?.temperature?.let {
+                Text(
+                    text = it.toString(),
+                    style = Typography.body1
+                )
+            }
             Spacer(modifier = Modifier.padding(top = 10.dp))
-            Text(text = weather?.currentWeather?.condition?.text ?: "Температура", style = Typography.body1)
+            Text(
+                text = weather?.currentWeather?.condition?.text ?: "Температура",
+                style = Typography.body1
+            )
         }
         if (weather != null) {
             val placeMark = ImageProvider.fromResource(
@@ -178,7 +205,10 @@ fun Info(viewModel: WeatherViewModel) {
             )
             SetCityMap(
                 onPointChange = { map ->
-                    val point = Point(weather?.location?.latitude ?: 0.0, weather?.location?.longitude ?: 0.0)
+                    val point = Point(
+                        weather?.location?.latitude ?: 0.0,
+                        weather?.location?.longitude ?: 0.0
+                    )
                     map.map.apply {
                         move(CameraPosition(point, 10.5f, 40.0f, 10.0f))
                         //ставит метку на карте по координатам
@@ -210,5 +240,13 @@ fun SetCityMap(onPointChange: (MapView) -> Unit) {
                 MapKitFactory.getInstance().onStop()
             }
         }
+    }
+}
+
+@Suppress("MissingPermission")
+fun getCurrentLocation(context: Context){
+    val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+        Timber.e(location.toString())
     }
 }
