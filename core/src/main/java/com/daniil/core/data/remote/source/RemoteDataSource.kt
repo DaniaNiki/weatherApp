@@ -24,7 +24,7 @@ class RemoteDataSource @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    private val apiKey = "46849f1b70e1493b82081332231503"
+  private val apiKey = "46849f1b70e1493b82081332231503"
 
    suspend fun getWeatherByCity(city:String) : Result<WeatherApiResponse> {
        return try {

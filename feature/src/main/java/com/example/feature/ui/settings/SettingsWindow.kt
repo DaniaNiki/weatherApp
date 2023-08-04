@@ -20,7 +20,7 @@ import com.example.feature.BuildConfig
 import com.example.feature.R
 import com.example.feature.theme.Typography
 import com.example.feature.theme.createBackgroundGradient
-import com.example.feature.theme.mainScreenGradient
+//import com.example.feature.theme.mainScreenGradient
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
@@ -29,13 +29,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 fun SettingsView(navController:NavController) {
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
-    var checked by remember {
-        mutableStateOf(false)
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .createBackgroundGradient(mainScreenGradient)
     ) {
         Row(modifier = Modifier.padding(start = 10.dp, top = 25.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = {
@@ -62,7 +58,7 @@ fun SettingsView(navController:NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.location_marker_38),
                         contentDescription = null,
-                        tint = if (checked) Color.Red else Color.Black
+                        tint = if (permissionState.allPermissionsGranted) Color.Red else Color.Black
                     )
                 },
                 colors = SwitchDefaults.colors(

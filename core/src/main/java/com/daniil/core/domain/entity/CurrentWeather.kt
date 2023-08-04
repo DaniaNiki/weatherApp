@@ -6,6 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CurrentWeather(
     val temperature:Float,
+    val temperatureFahrenheit:Float,
     val condition: Condition,
-    val windSpeed:Float
+    val windSpeed:Float,
+    val uv:Float,
 ):Parcelable

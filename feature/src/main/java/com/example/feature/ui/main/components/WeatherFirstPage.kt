@@ -17,13 +17,15 @@ import java.util.*
 fun WeatherFirstPage(weather: Weather) {
     Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top) {
         Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
-            Text(text = weather.location.localTime.toLocaleDateTime(timeZone = TimeZone.getTimeZone(weather.location.timeZoneId)) ?: "загрузка", style = Typography.body1)
+            Text(text = ("Время последенего обновления: \n" + weather.location.localTime.toLocaleDateTime(
+                timeZone = TimeZone.getTimeZone(weather.location.timeZoneId)
+            )) ?: "загрузка", style = Typography.body1)
         }
         Row(horizontalArrangement = Arrangement.Center) {
-            Text(text = weather.location.city ?: "загрузка",style = Typography.body1)
+            Text(text = "Температура по Фаренгейту: ${ weather.currentWeather.temperatureFahrenheit.toString() }" ?: "загрузка",style = Typography.body1)
         }
         Row(horizontalArrangement = Arrangement.Center) {
-            Text(text = "Температура: ${ weather.currentWeather.temperature.toString() }" ?: "загрузка",style = Typography.body1)
+            Text(text = "Индекс ультрафиолета: ${ weather.currentWeather.uv.toString() }" ?: "загрузка",style = Typography.body1)
         }
     }
 }

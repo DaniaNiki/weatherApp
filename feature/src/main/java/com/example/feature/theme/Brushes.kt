@@ -1,26 +1,25 @@
 package com.example.feature.theme
 
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.TileMode
 
-val morningGradient = Brush.verticalGradient(
+val morningScreenGradient = Brush.linearGradient(
     colors = morningWeather, // Gradient colors
-    tileMode = TileMode.Clamp
+    tileMode = TileMode.Decal
 )
 
-val dayGradient = Brush.verticalGradient(
-    colors = dayWeather, // Gradient colors
-    tileMode = TileMode.Clamp
+val dayScreenGradient = Brush.linearGradient(
+    colors = mainScreenBackground, // Gradient colors
+    tileMode = TileMode.Decal
 )
 
-val nightGradient = Brush.verticalGradient(
+val eveningScreenGradient = Brush.linearGradient(
+    colors = eveningWeather, // Gradient colors
+    tileMode = TileMode.Decal
+)
+
+val nightScreenGradient = Brush.linearGradient(
     colors = nightWeather, // Gradient colors
-    tileMode = TileMode.Clamp
-)
-
-val mainScreenGradient = Brush.linearGradient(
-    colors = mainScreenBackground,
     tileMode = TileMode.Decal
 )
 

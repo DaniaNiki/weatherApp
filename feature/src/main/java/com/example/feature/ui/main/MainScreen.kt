@@ -1,50 +1,25 @@
 package com.example.feature.ui.main
 
 import android.content.Context
-import android.location.Location
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.feature.theme.Typography
-import com.example.feature.theme.createBackgroundGradient
-import com.example.feature.theme.dayGradient
-import com.example.feature.theme.main
-import com.example.feature.theme.mainScreenBackground
-import com.example.feature.theme.mainScreenGradient
-import com.example.feature.theme.morningGradient
-import com.example.feature.theme.morningWeather
-import com.example.feature.theme.nightGradient
-import com.example.feature.ui.main.components.Moon
-import com.example.feature.ui.main.components.WeatherFirstPage
+import com.example.feature.ui.main.components.SetPager
 import com.example.feature.ui.main.viewmodel.WeatherViewModel
-import com.example.feature.util.getLocalTime
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -54,25 +29,13 @@ import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Float.min
-import java.lang.Math.cos
-import java.lang.Math.sin
-import java.time.LocalDateTime
 import java.util.*
 
 @Composable
 fun SetMainScreen(viewModel: WeatherViewModel) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .createBackgroundGradient(mainScreenGradient)
-    ) {
         Info(viewModel)
-    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -83,35 +46,20 @@ fun Info(viewModel: WeatherViewModel) {
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    var cityName by remember {
+    var cityName by rememberSaveable {
         mutableStateOf("Ярославль")
     }
 
     LaunchedEffect(Unit) {
         this.launch {
-            viewModel.getWeatherByCity("Ярославль")
+            viewModel.getWeatherByCity(cityName)
             getCurrentLocation(context)
         }
     }
 
-    val hours =
-        weather?.let { it.location.localTime.getLocalTime(timeZone = TimeZone.getTimeZone(it.location.timeZoneId)) }
-            ?: LocalDateTime.now().hour
-    val brushByTime by remember {
-        mutableStateOf(
-            when (hours) {
-                in 6..11 -> morningGradient // с 6 до 12 часов утра - белый цвет
-                in 12..17 -> dayGradient // с 12 до 18 часов дня - серый цвет
-                in 18..24 -> nightGradient // с 18 до 24 часов вечера - светло-серый цвет // todo: заменить на вечерний градиент
-                else -> nightGradient// ночью - черный цвет
-            }
-        )
-    }
-
     Column(
         modifier = Modifier
-            .fillMaxWidth(1f)
-            .createBackgroundGradient(mainScreenGradient),
+            .fillMaxWidth(1f),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -131,49 +79,7 @@ fun Info(viewModel: WeatherViewModel) {
                 focusManager.clearFocus()
             })
         )
-        VerticalPager(
-            modifier = Modifier
-                .defaultMinSize(minHeight = 150.dp)
-                .alpha(0.8f)
-                .padding(top = 20.dp)
-//                .shadow(12.dp, ambientColor = Color.Black)
-                .heightIn(max = 150.dp)
-                .fillMaxWidth(0.95f)
-                .background(
-                    color = Color.Transparent, shape = RoundedCornerShape(6.dp)
-                ), count = 2, state = pagerState,
-            horizontalAlignment = Alignment.Start
-        ) { page ->
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row {
-                    when (page) {
-                        0 -> {
-                            weather?.let { WeatherFirstPage(weather = it) }
-                        }
-                    }
-                }
-                Column(
-                    modifier = Modifier.height(50.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    repeat(pagerState.pageCount) { iteration ->
-                        val color =
-                            if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                        Box(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clip(CircleShape)
-                                .background(color)
-                                .size(10.dp)
-                        )
-                    }
-                }
-            }
-        }
+        SetPager(state = pagerState, weather = weather)
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -210,7 +116,7 @@ fun Info(viewModel: WeatherViewModel) {
                         weather?.location?.longitude ?: 0.0
                     )
                     map.map.apply {
-                        move(CameraPosition(point, 10.5f, 40.0f, 10.0f))
+                        move(CameraPosition(point, 12f, 40.0f, 10.0f))
                         //ставит метку на карте по координатам
                         map.map.mapObjects.addPlacemark(point, placeMark)
                     }
