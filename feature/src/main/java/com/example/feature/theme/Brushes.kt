@@ -8,6 +8,11 @@ val morningScreenGradient = Brush.linearGradient(
     tileMode = TileMode.Decal
 )
 
+val morningGradient = Brush.linearGradient(
+    colors = dayWeather, // Gradient colors
+    tileMode = TileMode.Decal
+)
+
 val dayScreenGradient = Brush.linearGradient(
     colors = mainScreenBackground, // Gradient colors
     tileMode = TileMode.Decal

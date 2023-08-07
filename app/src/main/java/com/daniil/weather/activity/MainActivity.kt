@@ -30,6 +30,7 @@ import com.example.feature.theme.WeatherTheme
 import com.example.feature.theme.createBackgroundGradient
 import com.example.feature.theme.dayScreenGradient
 import com.example.feature.theme.eveningScreenGradient
+import com.example.feature.theme.morningGradient
 import com.example.feature.theme.morningScreenGradient
 import com.example.feature.theme.nightScreenGradient
 import com.example.feature.util.getLocalTime
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
 }
 
 private fun getBrushByHours() = when (LocalDateTime.now().hour) {
-    in 6..11 -> morningScreenGradient // с 6 до 12 часов утра - белый цвет
+    in 6..11 -> morningGradient // с 6 до 12 часов утра - белый цвет
     in 12..17 -> dayScreenGradient // с 12 до 18 часов дня - серый цвет
     in 18..20 -> eveningScreenGradient // с 12 до 18 часов дня - серый цвет
     in 21..24 -> nightScreenGradient // с 18 до 24 часов вечера - светло-серый цвет
